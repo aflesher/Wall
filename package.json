@@ -1,0 +1,17 @@
+{
+  "name": "wall",
+  "version": "1.0.0",
+  "description": "A smart contract for writing on a wall",
+  "main": "./test/wall.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.10"
+  }
+}
