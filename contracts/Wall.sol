@@ -30,10 +30,11 @@ contract Wall {
       * @return color Post color
       * @return poster Post creator
       * @return price The sale price of the post spot or 0 if not for sale
+      * @return index Post index
       */
-    function getPost(uint _index) external view returns(string text, uint font, bytes6 color, address poster, uint price) {
+    function getPost(uint _index) external view returns(string text, uint font, bytes6 color, address poster, uint price, uint index) {
         Post memory post = posts[_index];
-        return(post.text, post.font, post.color, post.poster, forSale[_index]);
+        return(post.text, post.font, post.color, post.poster, forSale[_index], _index);
     }
 
     /** @dev Posts to the bottom of the wall.
