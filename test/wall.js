@@ -116,4 +116,20 @@ var Wall = artifacts.require("Wall"),
       let completed = await didComplete(wall.sellPost, [0, 500, {from: accounts[2]}]);
       assert.isFalse(completed, 'cannot buy post that isnt for sale');
     });
+
+    it('should reject strings that are too long', async () => {
+      let completed = await didComplete(wall.createPost, [_.times(101, _.constant('a')).join(''), 5, '00FF32', {from: accounts[1]}]);
+      assert.isFalse(completed, 'cannot post long strings');
+    });
+
+    it('should allow a user to delete a sale', async () => {
+      await wall.createPost('Some text', 5, '00FF32', {from: accounts[1]});
+      await wall.sellPost(0, 500, {from: accounts[1]});
+      let price = await wall.forSale.call(0);
+      assert.equal(price.toNumber(), 500, 'sale open');
+
+      await wall.closePostSale(0, {from: accounts[1]});
+      price = await wall.forSale.call(0);
+      assert.equal(price.toNumber(), 0, 'sale closed');
+    });
   });
