@@ -61,6 +61,11 @@ contract Wall {
         emit NewListening(_index, _price);
     }
 
+    
+    function getPostsCount() public view returns(uint) {
+        return posts.length;
+    }
+
     /** @dev Buy a post.
       * @param _index Sale index
       */
