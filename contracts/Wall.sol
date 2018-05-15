@@ -24,6 +24,18 @@ contract Wall {
         _;
     }
 
+    /** @dev Gets the details for a post with the price included.
+      * @return text Post text
+      * @return font Post font
+      * @return color Post color
+      * @return poster Post creator
+      * @return price The sale price of the post spot or 0 if not for sale
+      */
+    function getPost(uint _index) external view returns(string text, uint font, bytes6 color, address poster, uint price) {
+        Post memory post = posts[_index];
+        return(post.text, post.font, post.color, post.poster, forSale[_index]);
+    }
+
     /** @dev Posts to the bottom of the wall.
       * @param _text Post text
       * @param _font Post font

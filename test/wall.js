@@ -13,16 +13,6 @@ var Wall = artifacts.require("Wall"),
     return res
   }
 
-  function byteCode (str) {
-    var myBuffer = [];
-    var buffer = new Buffer(str, 'utf16le');
-    for (var i = 0; i < buffer.length; i++) {
-        myBuffer.push(buffer[i]);
-    }
-
-    console.log(myBuffer);
-  }
-
   async function didComplete(callback, args) {
     try {
       await callback.apply(this, args);
@@ -131,5 +121,13 @@ var Wall = artifacts.require("Wall"),
       await wall.closePostSale(0, {from: accounts[1]});
       price = await wall.forSale.call(0);
       assert.equal(price.toNumber(), 0, 'sale closed');
+    });
+
+    it('should have a post get method', async () => {
+      await wall.createPost('Some text', 5, '00FF32', {from: accounts[1]});
+      await wall.sellPost(0, 500, {from: accounts[1]});
+      let post = await wall.getPost.call(0);
+      assert.equal(post[0].valueOf(), 'Some text', 'text retrieved');
+      assert.equal(post[4].toNumber(), 500, 'sale price retrieved');
     });
   });
