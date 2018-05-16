@@ -6,7 +6,9 @@ contract Wall {
     struct Post {
         string text;
         uint8 font;
-        bytes6 color;
+        uint8 red;
+        uint8 green;
+        uint8 blue;
         address poster;
     }
 
@@ -27,24 +29,36 @@ contract Wall {
     /** @dev Gets the details for a post with the price included.
       * @return text Post text
       * @return font Post font
-      * @return color Post color
+      * @return red Post color red value
+      * @return green Post color green value
+      * @return blue Post color blue value
       * @return poster Post creator
       * @return price The sale price of the post spot or 0 if not for sale
       * @return index Post index
       */
-    function getPost(uint _index) external view returns(string text, uint font, bytes6 color, address poster, uint price, uint index) {
+    function getPost(uint _index) external view returns(string text, uint font, uint red, uint green, uint blue,
+        address poster, uint price, uint index) {
         Post memory post = posts[_index];
-        return(post.text, post.font, post.color, post.poster, forSale[_index], _index);
+        text = post.text;
+        font = post.font;
+        red = post.red;
+        green = post.green;
+        blue = post.blue;
+        poster = post.poster;
+        price = forSale[_index];
+        index = _index;
     }
 
     /** @dev Posts to the bottom of the wall.
       * @param _text Post text
       * @param _font Post font
-      * @param _color Post color
+      * @param _red Post red value
+      * @param _green Post green value
+      * @param _blue Post blue value
       * @return uint The location on the wall
       */
-    function createPost(string _text, uint8 _font, bytes6 _color) maxText(_text) external returns(uint) {
-        posts.push(Post(_text, _font, _color, msg.sender));
+    function createPost(string _text, uint8 _font, uint8 _red, uint8 _green, uint8 _blue) maxText(_text) external returns(uint) {
+        posts.push(Post(_text, _font, _red, _green, _blue, msg.sender));
         return posts.length - 1;
     }
 
@@ -52,13 +66,17 @@ contract Wall {
       * @param _index Post index
       * @param _text Post text
       * @param _font Post font
-      * @param _color Post color
+      * @param _red Post red value
+      * @param _green Post green value
+      * @param _blue Post blue value
       */
-    function updatePost(uint _index, string _text, uint8 _font, bytes6 _color) maxText(_text) isPoster(_index) external {
+    function updatePost(uint _index, string _text, uint8 _font, uint8 _red, uint8 _green, uint8 _blue) maxText(_text) isPoster(_index) external {
         Post storage post = posts[_index];
         post.text = _text;
         post.font = _font;
-        post.color = _color;
+        post.red = _red;
+        post.green = _green;
+        post.blue = _blue;
     }
 
     event NewListening(uint index, uint price);
