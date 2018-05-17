@@ -14,6 +14,8 @@ contract Wall {
 
     Post[] public posts;
 
+    address _owner;
+
     mapping (uint => uint) public forSale;
 
     modifier isPoster(uint index) {
@@ -24,6 +26,14 @@ contract Wall {
     modifier maxText(string _text) {
         require(bytes(_text).length <= 100);
         _;
+    }
+
+    constructor() public {
+        _owner = msg.sender;
+    }
+
+    function() payable public {
+
     }
 
     /** @dev Gets the details for a post with the price included.
@@ -115,6 +125,14 @@ contract Wall {
       */
     function closePostSale(uint _index) isPoster(_index) external {
         delete forSale[_index];
+    }
+
+    /** @dev Allows the owner to withdraw funds from the contract
+     * @param _amount The value to withdraw
+     */
+    function withdraw(uint _amount) external {
+        require(msg.sender == _owner);
+        address(_owner).transfer(_amount);
     }
 
 }

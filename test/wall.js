@@ -142,4 +142,18 @@ var Wall = artifacts.require("Wall"),
       assert.equal(post[0].valueOf(), 'Some text', 'text retrieved');
       assert.equal(post[6].toNumber(), 500, 'sale price retrieved');
     });
+
+    it('should allow the owner to withdraw any funds', async() => {
+      await web3.eth.sendTransaction({from: accounts[1], to: wall.address, value:web3.toWei(1, "ether")});
+      let balance1 = await web3.eth.getBalance(accounts[0]);
+      await wall.withdraw(web3.toWei(1, "ether"), {from: accounts[0]});
+      let balance2 = await web3.eth.getBalance(accounts[0]);
+      assert.isAbove(balance2.toNumber(), balance1.toNumber(), 'balance added');
+    });
+
+    it('should only allow the owner to withdraw any funds', async() => {
+      await web3.eth.sendTransaction({from: accounts[1], to: wall.address, value:web3.toWei(1, "ether")});
+      let completed = await didComplete(wall.withdraw, web3.toWei(1, "ether"), {from: accounts[2]});
+      assert.isFalse(completed, 'cannot withdraw any funds');
+    });
   });
