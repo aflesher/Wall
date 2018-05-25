@@ -111,12 +111,12 @@ contract Wall {
       * @param _index Sale index
       */
     function buyPost(uint _index) payable public {
-        uint cost = forSale[_index];
-        require(cost != 0 && msg.value >= cost);
+        require(msg.value != 0 && msg.value == forSale[_index]);
         Post storage post = posts[_index];
-        address(post.poster).transfer(msg.value); // todo, should probably refund any extra?
+        uint fee = msg.value / 100;
+        address(post.poster).transfer(msg.value - fee);
         post.poster = msg.sender;
-        emit SoldPost(_index, cost);
+        emit SoldPost(_index, msg.value);
         delete forSale[_index];
     }
 

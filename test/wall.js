@@ -104,7 +104,10 @@ var Wall = artifacts.require("Wall"),
       assert.equal(post[5].valueOf(), accounts[2], 'address is set');
 
       let sellerNewBalance = await web3.eth.getBalance(accounts[1]);
-      assert.equal(sellerNewBalance.valueOf(), add(sellerBalance.valueOf(), cost + ""), 'funds transfered');
+      assert.equal(sellerNewBalance.valueOf(), add(sellerBalance.valueOf(), Math.floor(cost * .99) + ""), 'funds transfered');
+
+      let contractBalance = await web3.eth.getBalance(wall.address);
+      assert.equal(contractBalance.valueOf(), Math.floor(cost * .01) + "", 'contract held funds');
     });
 
     it('should not allow user to buy post that isnt for sale', async () => {
