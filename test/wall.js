@@ -1,18 +1,6 @@
 var Wall = artifacts.require("Wall"),
   _ = require('lodash');
 
-  function add (a, b) {
-    let res = '', c = 0
-    a = a.split('')
-    b = b.split('')
-    while (a.length || b.length || c) {
-      c += ~~a.pop() + ~~b.pop()
-      res = c % 10 + res
-      c = c > 9
-    }
-    return res
-  }
-
   async function didComplete(callback, args) {
     try {
       await callback.apply(this, args);
@@ -104,7 +92,7 @@ var Wall = artifacts.require("Wall"),
       assert.equal(post[5].valueOf(), accounts[2], 'address is set');
 
       let sellerNewBalance = await web3.eth.getBalance(accounts[1]);
-      assert.equal(sellerNewBalance.valueOf(), add(sellerBalance.valueOf(), Math.floor(cost * .99) + ""), 'funds transfered');
+      assert.equal(sellerNewBalance.valueOf(), sellerBalance.add(Math.floor(cost * .99)).valueOf(), 'funds transfered');
 
       let contractBalance = await web3.eth.getBalance(wall.address);
       assert.equal(contractBalance.valueOf(), Math.floor(cost * .01) + "", 'contract held funds');
